@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View,Text,TextInput,StyleSheet,TouchableOpacity,Alert } from 'react-native';
+import { View,Text,TextInput,StyleSheet,TouchableOpacity,Alert, ImageBackground } from 'react-native';
 import { firestore } from '../firebase';
 import { collection, addDoc } from "firebase/firestore";
 
@@ -25,9 +25,10 @@ export default function CadastrarRefeicao({navigation}) {
         }
     }
     return (
+        <ImageBackground style={estilo.fundo2} resizeMode="cover" source={require('../assets/refeicao.jpg')}>
         <View style={estilo.container}>
             <View>
-                <Text style={estilo.titulo}> Cadastre uma nova Criptomoeda</Text>
+                <Text style={estilo.titulo}> Cadastre uma nova refeição no cardápio</Text>
             </View>
             <TextInput autoCapitalize='words' style={estilo.input} placeholder="Digite a Refeição" onChangeText={setNomeRefeicao} value={nomeRefeicao} />
             <TextInput style={estilo.input} placeholder="Digite a Bebida" onChangeText={setBebida} value={bebida} />
@@ -41,6 +42,7 @@ export default function CadastrarRefeicao({navigation}) {
                 <Text style={estilo.btntxtenviar}> Enviar </Text>
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 }
 
@@ -50,22 +52,35 @@ const estilo = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    fundo2: {
+        flex: 1,
+    },
     input: {
         marginVertical: 10,
         marginHorizontal: 10,
-        backgroundColor: '#9ac234',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        fontSize: 15,
+        backgroundColor:'white',
+        fontWeight:'700',
+        padding:8,
+        width:180,
+        fontSize: 18,
         borderRadius: 10,
     },
     btnenviar: {
         marginTop: 20,
+        backgroundColor: '#686868',
+        borderColor:'#ffffff',
+        borderWidth:0.6,
+        borderRadius:10,
+        padding:10,
     },
     btntxtenviar: {
-        fontSize: 25,
+        color:'white',
+        fontWeight:'600',
+        backgroundColor:'',
+        fontSize: 18,
     },
     titulo: {
+        color:'white',
         marginVertical: 40,
         fontSize: 25,
         textAlign: 'center',

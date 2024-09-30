@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { firestore } from '../firebase';
 import { collection, doc, updateDoc } from "firebase/firestore";
 
@@ -29,11 +29,12 @@ export default function AlterarCriptos({navigation, route}) {
         }
     }
         return (
+        <ImageBackground style={estilo.fundo2} resizeMode="cover" source={require('../assets/refeicao.jpg')}>
             <View style={estilo.container}>
                 <View>
                     <Text style={estilo.titulo}> Alterar dados da Refeição </Text>
                 </View>
-                <View>
+                <View  style={estilo.inputView} >
                     <TextInput autoCapitalize='words' style={estilo.input} placeholder="Digite a Refeição" onChangeText={setNomeRefeicao} value={nomeRefeicao} />
                     <TextInput style={estilo.input} placeholder="Digite a Bebida" onChangeText={setBebida} value={bebida} />
                     <TextInput style={estilo.input} placeholder="Digite a Sobremesa" onChangeText={setSobremesa} value={sobremesa} />
@@ -46,6 +47,7 @@ export default function AlterarCriptos({navigation, route}) {
                     </TouchableOpacity>
                 </View>
             </View>
+        </ImageBackground>
         );
     }
 
@@ -56,22 +58,45 @@ export default function AlterarCriptos({navigation, route}) {
             justifyContent: 'center',
             alignItems: 'center',
         },
+        fundo2: {
+            flex: 1,
+        },
         input: {
             marginVertical: 10,
             marginHorizontal: 10,
-            backgroundColor: '#9ac234',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            fontSize: 15,
+            backgroundColor:'white',
+            fontWeight:'700',
+            padding:8,
+            width:260,
+            fontSize: 18,
             borderRadius: 10,
         },
+
+        inputView: {
+            justifyContent:'center',
+            textAlign:'center',
+            alignItems:'center',
+        },
         btnenviar: {
-            marginTop: 20,
+            marginTop: 38,
+            backgroundColor: '#686868',
+            borderColor:'#ffffff',
+            borderWidth:0.6,
+            borderRadius:10,
+            padding:10,
+            width:110,
         },
         btntxtenviar: {
-            fontSize: 25,
+            color:'white',
+            fontWeight:'600',
+            backgroundColor:'',
+            fontSize: 18,
+            justifyContent:'center',
+            textAlign:'center',
+
         },
         titulo: {
+            color:'white',
             marginVertical: 40,
             fontSize: 25,
             textAlign: 'center',

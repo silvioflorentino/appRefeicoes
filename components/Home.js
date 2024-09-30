@@ -1,141 +1,208 @@
-import React,{ useEffect,useState } from "react";
-import { View,Text,StyleSheet,FlatList,TouchableOpacity,Alert,ImageBackground } from "react-native";
-import{ firestore } from "../firebase";
-import { collection, onSnapshot, deleteDoc,doc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, ImageBackground } from "react-native";
+import { firestore } from "../firebase";
+import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
     const [refeicao, setRefeicao] = useState([]);
-    
-    async function deleteRefeicao(id){
+
+    async function deleteRefeicao(id) {
         try {
-            await deleteDoc(doc(firestore,'tbRefeicao',id));
+            await deleteDoc(doc(firestore, 'tbRefeicao', id));
             Alert.alert("Refeição deletada.")
         } catch (error) {
             console.error("Erro ao deletar.", error)
         }
     }
 
-    useEffect(()=>{
-        const unsubcribe = onSnapshot(collection(firestore,'tbRefeicao'),(querySnapshot)=>{
-            const lista =[];
-            querySnapshot.forEach((doc)=>{
-                lista.push({...doc.data(), id: doc.id});
+    useEffect(() => {
+        const unsubcribe = onSnapshot(collection(firestore, 'tbRefeicao'), (querySnapshot) => {
+            const lista = [];
+            querySnapshot.forEach((doc) => {
+                lista.push({ ...doc.data(), id: doc.id });
             });
             setRefeicao(lista);
         });
         return () => unsubcribe();
-    
-},[]);
 
-return(
-   <View style={estilo.container}>
-        <View>
-             <Text style={estilo.titulo}> Lista de Refeições </Text>
-        </View>     
-        <FlatList
-            data={refeicao}
-            renderItem={({item})=>{
-                return(
-                    <View style={estilo.refeicoesstyle}>
-                        <TouchableOpacity onPress={()=>navigation.navigate("Alterar",{
-                            id: item.id,
-                            nomeRefeicao: item.nomeRefeicao,
-                            bebida: item.bebida,
-                            sobremesa: item.sobremesa
-                        })}>
-                            <View style={estilo.itens}>
-                                <Text style={estilo.titulo2}>Refeição <Text>{item.nomeRefeicao}</Text> </Text>
-                                <Text style={estilo.titulo2}>Bebida <Text>{item.bebida}</Text> </Text>
-                                <Text style={estilo.titulo2}>Sobremesa <Text>{item.sobremesa}</Text> </Text>
-                            </View>
-                        </TouchableOpacity>
-                        <View estyle={estilo.botaodeletar}>
-                            <TouchableOpacity onPress={()=>{deleteRefeicao(item.id)}}>
+    }, []);
+
+    return (
+        <ImageBackground style={estilo.fundo} resizeMode="cover" source={require('../assets/refeicao.jpg')}>
+            <View style={estilo.container}>
+
+                <View style={estilo.blocoTitulo}>
+                    <Text style={estilo.titulo2}> Lista de Refeições </Text>
+                </View>
+
+                <View style={estilo.itensView}>
+                <FlatList
+                    data={refeicao}
+                    renderItem={({ item }) => {
+                        return (
                             
-                                <Text style={estilo.deletar}> [X] </Text>
+                            <View style={estilo.refeicoesstyle}>
+                                    <TouchableOpacity onPress={() => navigation.navigate("Alterar", {
+                                        id: item.id,
+                                        nomeRefeicao: item.nomeRefeicao,
+                                        bebida: item.bebida,
+                                        sobremesa: item.sobremesa
+                                    })}>
+                                        <View style={estilo.itens}>
+                                            <Text style={estilo.titulo4}> <Text>Refeição Cadastrada</Text> </Text>
+                                            <Text style={estilo.titulo3}> <Text>{item.nomeRefeicao}</Text> </Text>
+                                            <Text style={estilo.titulo3}> <Text>{item.bebida}</Text> </Text>
+                                            <Text style={estilo.titulo3}> <Text>{item.sobremesa}</Text> </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <View estyle={estilo.botaodeletar}>
+                                        <TouchableOpacity onPress={() => { deleteRefeicao(item.id) }}>
 
-                            </TouchableOpacity>
-                        </View>
+                                            <Text style={estilo.deletar}> X </Text>
 
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                        );
+                    }}
+                    />
+                <TouchableOpacity style={estilo.BtnCadastrar} onPress={() => navigation.navigate("Cadastrar")}>
+                    <Text style={estilo.cadastrar}>+</Text>
+                </TouchableOpacity>
+            </View>
                     </View>
-                );
-            }}            
-      />
-      <TouchableOpacity onPress={()=> navigation.navigate("Cadastrar")}>
-        
-        <Text style={estilo.cadastrar}>[+]</Text>
-
-      </TouchableOpacity>
-   </View>
-);
-
+        </ImageBackground>
+    );
 }
 
 
 const estilo = StyleSheet.create({
-    container:{
-      flex:1,
-      justifyContent: 'center',
-      alignItems: 'center'
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop:200,
     },
-    titulo:{
-        
-      marginTop: 50,
-      fontSize:30,
-        color: 'Black',
-        
+
+    fundo: {
+        flex: 1,
+        resizeMode: '',
     },
-    itens:{
-        zIndex:1,
+
+    fundo2: {
+        flex: 1,
+        width:'auto',
+        height:'100%',
+        borderColor:'white',
+        borderTopWidth:1.2,
+        borderBottomWidth:1.2,
+        margin:8,
+    },
+
+    itens: {
+        borderRadius: 60,
+        zIndex: 1,
         color: 'black',
         marginHorizontal: 10,
         marginVertical: 10,
         padding: 10,
+        width: 200,
+        height:100,
+        justifyContent: 'center',
+        textAlign: 'center',
     },
-    titulo2:{
-        fontSize: 25,
-        color:"black",
-    },
- 
-   
-    refeicoesstyle:{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginHorizontal: 10,
-      marginVertical: 10,
-      padding: 10,
-      backgroundColor: '#fff',
-      borderRadius:10
-    },
-    botaodeletar:{
-        fontSize: 50,
-        zIndex:1,
-        Color:'Black',
-      textAlignVertical: 'center',
-      marginVertical: 20,
-      left:180,
-    },
-    deletar:{
-        fontSize: 20,
-        color:"Black",
-    },
-    cadastrar:{
-        zIndex:1,
-        Color:'green',
-        fontSize: 50,
-        color:"Black",
-        left:180,
-        bottom:20,
 
+
+    titulo2: {
+        fontSize: 25,
+        justifyContent: 'center',
+        textAlign: 'center',
+        color: "white",
+        fontWeight: '900',
+        margin: 18,
+        textDecorationStyle:'double',
+        textDecorationLine:'underline'
+    },
+
+    titulo1: {
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontSize: 25,
+        color: "white",
+        fontWeight: '900',
+        margin: 8,
+      
+    },
+
+    titulo3: {
+        position: 'relative',
+        left: 12,
+        justifyContent: 'center',
+        textAlign: 'left',
+        fontSize: 18,
+        fontWeight: '400',
     },
     
-    addbutton:{
-    backgroundColor: '#ffffff',
-    borderRadius: 50,
-    position: 'absolute',
-    left: 20,
-    bottom: 40,
-    justifyContent: "center",
-    alignItems: "center"
-    }
+    titulo4: {
+        position: 'relative',
+        left: 3,
+        top: -10,
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: '700',
+    },
+
+
+    refeicoesstyle: {
+        backgroundColor:'#fff',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 10,
+        marginVertical: 10,
+        padding: 10,
+    },
+    botaodeletar: {
+        fontSize: 30,
+        zIndex: 1,
+        Color: 'Black',
+        textAlignVertical: 'center',
+        marginVertical: 20,
+        left: 180,
+        borderRadius:30,
+    },
+    deletar: {
+        backgroundColor: '#FF5050',
+        fontSize: 18,
+        color: "white",
+        borderRadius: 3,
+        fontWeight: '800',
+    },
+    cadastrar: {
+        fontSize:32,
+        color: "white",
+        fontWeight:'600',
+    },
+    
+    BtnCadastrar: {
+        fontSize: 80,
+        left:'72%',
+        bottom:'10%',
+        width:50,
+        height:50,
+        justifyContent:'center',
+        textAlign:'center',
+        alignItems:'center',
+        borderRadius:16,
+        borderColor:'white',
+        borderWidth:2,
+        marginBottom:10,
+        backgroundColor: '#787878',
+    },
+
+    itensView: {
+        height:'110%',
+    },
+
+
 });
