@@ -66,10 +66,10 @@ export default function Home({ navigation }) {
                         );
                     }}
                     />
+            </View>
                 <TouchableOpacity style={estilo.BtnCadastrar} onPress={() => navigation.navigate("Cadastrar")}>
                     <Text style={estilo.cadastrar}>+</Text>
                 </TouchableOpacity>
-            </View>
                     </View>
         </ImageBackground>
     );
@@ -186,8 +186,8 @@ const estilo = StyleSheet.create({
     
     BtnCadastrar: {
         fontSize: 80,
-        left:'72%',
-        bottom:'10%',
+        left:'40%',
+        bottom:'18%',
         width:50,
         height:50,
         justifyContent:'center',

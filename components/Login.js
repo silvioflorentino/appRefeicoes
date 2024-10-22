@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert,TextInput } from "react-native";
-import { Firebase } from "../firebase";
+import {auth} from "../firebase";
+import {signInWithEmailAndPassword}from 'firebase/auth';
+
 
 export default function Login({navigation}) {
 const [email,setEmail] = useState('');
@@ -14,29 +16,38 @@ function dados(user) {
 }
 
 function logar() {
-    Firebase.auth().signInWithEmailAndPassword(email,senha)
-    .then(()=>{
-        if(user){
-            alert('Usuário não existe.');
-            return;
+    signInWithEmailAndPassword(auth,email, senha)
+      .then(() => {
+        if (!user) {
+          alert('Usuário não existente');
+          return;
         }
-        navigation.navigate('Rotas',{email})
-    })
-    .catch((error) => {
+        //const user = user.uid
+        navigation.navigate('Rotas', { email });
+      })
+      .catch((error) => {
         alert(error);
-        navigation.navigate('login')
-    })
-    
-}
-    return (
+        navigation.navigate('Login');
+      });
+  }
+
+useEffect(() => {
+     const unsubscribe = auth.onAuthStateChanged(user => {
+        dados(user);
+        });
+   return ()=> unsubscribe();
+  }, []);
+
+
+  return (
         <View style={estilo.container}>
             <Text style={estilo.titulo}>Entrar</Text>
-                <TextInput style={estilo.input} placeholder="Digite o email."/>
-                <TextInput style={estilo.input} placeholder="Digite a senha."/>
+                <TextInput style={estilo.input} onChangeText={text => setEmail(text)} placeholder="Digite o email."/>
+                <TextInput style={estilo.input} secureTextEntry={true} onChangeText={text => setSenha(text)}  placeholder="Digite a senha."/>
                 
-                <TouchableOpacity style={estilo.botaoLogar}> 
-                    <Text style={estilo.textoBotaoLogar}>Logar</Text>    
-                </TouchableOpacity> 
+                <TouchableOpacity  style={estilo.botaoLogar} onPress={() => {logar();}}>
+                    <Text style={estilo.textoBotaoLogar}>Logar</Text>
+                </TouchableOpacity>
 
         </View>
     );
